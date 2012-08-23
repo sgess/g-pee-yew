@@ -1,5 +1,13 @@
 function tot = run_man(N, viz, alg)
 
+if nargin == 2
+    alg=0;
+elseif nargin == 1
+    viz=0;
+elseif nargin == 0
+    error('Must define grid size');
+end
+
 %Initialize grid arrays
 a = zeros(N);
 b = zeros(N);
@@ -41,7 +49,9 @@ its = 30;
 
 for it=1:its
 
-    if(vector
+    if(vector)
+        z = vect_man(a,b,J,K,its);
+        endf
     tic;
 
     a_t = a.^2 - b.^2 + J;
