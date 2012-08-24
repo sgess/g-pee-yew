@@ -1,11 +1,11 @@
-function tot = run_man(N, viz, alg)
+function time = run_man(N, edgeX, edgeY, its, alg, viz)
 
-if nargin == 2
+if nargin == 5
+    viz=false;
+elseif nargin == 4
     alg=0;
-elseif nargin == 1
-    viz=0;
-elseif nargin == 0
-    error('Must define grid size');
+elseif nargin < 4
+    error('Must define grid and number of iterations.');
 end
 
 %Initialize grid arrays
@@ -16,62 +16,27 @@ c = uint8(zeros(N));
 
 j = 1:N;
 J = repmat(j, length(j), 1);
-J = J/(N/2) - 1.5;
+J = J/(N/2) + edgeX;
 
 k = 1:N;
 K = repmat(k', 1, length(k));
-K = -K/(N/2) + 1;
-
-%Timing and visulization
-tot = 0;
-step = false; %discrete shading
-cont = false; %continous shading
-if(viz == 1)
-    step = true;
-elseif(viz == 2)
-    cont = true;
-end
+K = -K/(N/2) + edgeY;
 
 %Algorithm
-looper = false;
-vector = false;
-gooper = false;
 if(alg == 0)
-    looper = true;
+    [z,c,tot] = loop_man(a,b,z,c,N,edgeX,edgeY,its);
 elseif(alg == 1)
-    vector = true;
+    [z,c,tot] = vect_man(a,b,z,c,J,K,its);
 elseif(alg == 2)
     gooper = true;
 end
 
-%Number of iterations
-its = 30;
-
-for it=1:its
-
-    if(vector)
-        z = vect_man(a,b,J,K,its);
-        endf
-    tic;
-
-    a_t = a.^2 - b.^2 + J;
-    b = 2*a.*b + K;
-    a = a_t;
-    
-    z = sqrt(a.^2 + b.^2);
-    
-    c = uint8(it*(z > 2 & c == 0)) + c; 
-    
-    t = toc;
+if viz
     imagesc(c);
-    pause(0.1);
-    disp(['Step time is ' num2str(t) ' seconds.']);
-    tot = tot + t;
+    colorbar;
+    %saveas(gcf,'man.pdf');
 end
 
-%z = sqrt(a.^2 + b.^2);
-%imagesc(log(abs(log(z))));
+time = sum(tot);
 
-
-
-disp(['Total time for 30 steps is ' num2str(tot) ' seconds. Average time is ' num2str(tot/30) ' seconds.']);
+disp(['Total time for 30 steps is ' num2str(time) ' seconds. Average time is ' num2str(mean(tot)) ' seconds.']);
