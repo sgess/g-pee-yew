@@ -30,7 +30,8 @@ elseif(alg == 1)
 elseif(alg == 2)
     [z,c,tot] = arry_man(a,b,z,c,J,K,its);
 elseif(alg == 3)
-    [z,c,tot] = gary_man(a,b,z,c,J,K,its);
+    %[z,c,tot] = gary_man(a,b,z,c,J,K,its);
+    [z,tot] = gary_man(a,b,z,c,J,K,its);
 end
 
 if viz
